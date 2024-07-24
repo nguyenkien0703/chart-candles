@@ -1,9 +1,8 @@
 import { useRef, useEffect } from "react";
-import "./App.css";
+import "../../src/App.css";
 import { ColorType, createChart } from "lightweight-charts";
 function App() {
   const chartContainerRef = useRef();
-  console.log(new Date())
   useEffect(() => {
     const initialData = [
       { open: 10, high: 10.63, low: 9.49, close: 9.55, time: 1642427876 },
@@ -18,28 +17,18 @@ function App() {
       { open: 10.93, high: 11.53, low: 10.76, close: 10.96, time: 1643205476 },
     ];
 
-    const chart = createChart(chartContainerRef.current);
-    chart.applyOptions({
-      layout: {
-        background: { color: "#222" },
-        textColor: "#DDD",
-      },
-      grid: {
-        vertLines: { color: "#444" },
-        horzLines: { color: "#444" },
-      },
+    const chart = createChart(chartContainerRef.current, {
+        layout: {
+            background: {color: "#222"},
+            textColor: "#DDD"
+        },
+        grid: {
+            vertLines: {color: "#444"},
+            horzLines: {color: "#444"},
+        },
       width: chartContainerRef.current.clientWidth,
       height: 500,
     });
-    // chart.timeScale().fitContent();
-    chart.timeScale().applyOptions({
-      borderColor: "#71649C",
-      rightOffset: 20,
-      barSpacing: 15,
-      minBarSpacing: 10,
-      fixLeftEdge: true,
-    });
-
     const newSeries = chart.addCandlestickSeries({
       upColor: "#26a69a",
       downColor: "#ef5350",
@@ -48,31 +37,8 @@ function App() {
       wickDownColor: "#ef5350",
     });
     newSeries.setData(initialData);
-    // Setting the border color for the vertical axis
-    chart.priceScale("right").applyOptions({
-      borderColor: "#71649C",
-    });
-
-    // Setting the border color for the horizontal axis
-    chart.timeScale("right").applyOptions({
-      borderColor: "#71649C",
-    });
-
-    const handleResize = () => {
-      chart.applyOptions({
-        width: chartContainerRef.current.clientWidth,
-      });
-    };
-    window.addEventListener("resize", handleResize);
-
-    return () => [
-      chart.remove(),
-      window.removeEventListener("resize", handleResize),
-    ];
+    return () => [chart.remove()];
   }, []);
-
-
-  
 
   return <div ref={chartContainerRef}></div>;
 }
